@@ -1,0 +1,218 @@
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+let mapleader = "-"
+let maplocalleader = "\\"
+:nnoremap <leader>ev :vertical topleft split $MYVIMRC<cr>
+:nnoremap <leader>sv :source $MYVIMRC<cr>
+
+let s:filename=expand('<sfile>', ':p')
+function! s:ScriptPath()
+	return s:filename
+endfunction
+let s:curFileDir = expand('<sfile>:p:h')
+let s:vim_personal_extra_path = s:curFileDir . "/bundle/vim-personal-extra"
+let s:reSearch = s:curFileDir . "/bundle/reSearch"
+
+" set the runtime path to include Vundle and initialize
+let &rtp =  s:curFileDir . "/bundle/Vundle.vim," . &rtp
+call vundle#begin(s:curFileDir . "/bundle")
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+" The following are examples of different formats supported.
+" Keep Plugin commands between vundle#begin/end.
+" plugin on GitHub repo
+"Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-sensible'
+Plugin 'junegunn/vim-easy-align'
+"Plugin 'tmhedberg/SimpylFold'
+" Plugin 'vim-scripts/indentpython.vim'
+" Plugin 'jnurmine/Zenburn'
+" Plugin 'altercation/vim-colors-solarized'
+" Plugin 'scrooloose/syntastic'
+" Plugin 'jpalardy/vim-slime.git'
+" Plugin 'vim-scripts/Conque-GDB'
+" Plugin 'tarruda/vim-conque-repl'
+" Plugin 'vhda/verilog_systemverilog.vim'
+" Plugin 'morhetz/gruvbox'
+Plugin 'tomasr/molokai'
+Plugin 'vim-autoformat/vim-autoformat'
+Plugin 'tomtom/tcomment_vim'
+Plugin 'ivechan/gtags.vim'
+Plugin 'bfrg/vim-cpp-modern'
+Plugin 'github/copilot.vim'
+Plugin 'junegunn/fzf'
+Plugin 'junegunn/fzf.vim'
+Plugin 'tpope/vim-surround'
+
+"Plugin 'vim-scripts/taglist.vim'
+let s:var = "file://" . s:vim_personal_extra_path
+call vundle#config#bundle(s:var)
+let s:var = "file://" . s:reSearch
+call vundle#config#bundle(s:var)
+
+" Install vim-maktaba plugin for plugin developers - used in foldcol
+"Plugin 'google/vim-maktaba'
+" Install foldcol - folding columns using <ctrl-v> visual mark, then
+" :VFoldCol
+"Plugin 'paulhybryant/foldcol'
+
+" plugin from http://vim-scripts.org/vim/scripts.html
+"Plugin 'L9'
+" Git plugin not hosted on GitHub
+"Plugin 'git://git.wincent.com/command-t.git'
+" git repos on your local machine (i.e. when working on your own plugin)
+"Plugin 'file:///home/gmarik/path/to/plugin'
+" The sparkup vim script is in a subdirectory of this repo called vim.
+" Pass the path to set the runtimepath properly.
+"Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+" Install L9 and avoid a Naming conflict if you've already installed a
+" different version somewhere else.
+"Plugin 'ascenator/L9', {'name': 'newL9'}
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+"
+" see :h vundle for more details or wiki for FAQ
+" Put your non-Plugin stuff after this line
+
+set vb       " turn on visual bell
+set t_vb=    " turn of sound bell
+
+"setting color scheme
+colorscheme molokai
+
+set directory="~/vim-swap//"  "location to store vim-swap files
+set diffopt=filler,iwhite,vertical
+set tabstop=4
+set shiftwidth=4
+set hlsearch
+set incsearch
+set number
+set ignorecase
+set nolist
+set statusline=
+set statusline+=[%n]                                 "buffernr
+set statusline+=\ %<%F\                              "File+path
+set statusline+=%y\                                  "FileType
+set statusline+=%{&ff}\                              "FileFormat (dos/unix..) 
+set statusline+=%=\ %l,%c-%v\ (%p%%)                 "Rownumber/total (%)
+set statusline+=\ %m%r%w                             "Modified? Readonly?
+
+xnoremap ga :EasyAlign
+nnoremap ga :EasyAlign
+
+
+" configure vim-fugitive
+"let g:fugitive_git_executable = 'git.exe'
+
+"runtime ftplugin/man.vim
+"set keywordprg=:Man
+"mapping for copying to OS clipboard (on Windows)
+vnoremap  <buffer> <leader>y  y:let @+=@"<cr>
+nnoremap  <buffer> <leader>p  "+p
+
+"configuration for js/ts lang-server
+" function! StartLspServerForJs()
+" 	"configuring lsp
+" 	echom "Starting Lsp Server for Js & Ts"
+" 	if executable("typescript-language-server")
+" 		let lspServers = [
+" 			\     #{
+" 			\	 		filetype: ['javascript', 'typescript'],
+" 			\	 		path: 'typescript-language-server',
+" 			\	 		args: ['--stdio']
+" 			\      }
+" 			\   ]
+" 		call LspAddServer(lspServers)
+" 		let lspOpts = {'autoHighlightDiags': v:false}
+" 		augroup JsLsp
+" 			au!
+" 			autocmd VimEnter * call LspAddServer(lspServers)
+" 			autocmd VimEnter * call LspOptionsSet(lspOpts)
+" 		augroup END
+" 	endif
+" endfunction
+" augroup JsMain
+" 	au!
+" 	autocmd FileType javascript,typescript :nnoremap <buffer> <localleader>ls :call StartLspServerForJs()<cr>
+" augroup END
+
+
+" Added :cfilter command for filtering quickfix list further
+packadd cfilter
+augroup QuickFixConfigure
+	au!
+	" relative numb
+	autocmd BufReadPost quickfix setlocal relativenumber
+augroup END
+
+" let g:vimspector_enable_mappings = 'VISUAL_STUDIO'
+
+let g:clang_format_path = "/mnt/e/mgd2off1/Build/OfficeNugetInit/gen/.versionless/microsoft.office.clang-format/bin/clang-format.exe"
+let g:clang_format_fallback_style = "Microsoft"
+
+
+" to open file changed from main-branch in quick-fix list
+nnoremap <leader>df :cgetexpr system("git.exe diff --name-only user/mgoel/main..HEAD \| sed s/$/:1:--/g" )<cr>:botright copen<cr>
+
+
+"vim errorformat for visual studio
+let &efm = &efm .. "," .. '\ %#%f(%l\\\,%c):\ %m'
+let &efm = &efm .. "," .. '\ %#%f(%l)\ :\ %m'
+
+"open visual studio log (load-log)
+nnoremap <leader>llb   :call mylib#OpenWindowLog('../Logs/Builds/latest/ProductBuild/Domino.err')<cr>
+command! -nargs=1 -complete=file  OpenWindowLog call mylib#OpenWindowLog('<f-args>')
+
+
+
+"configure ripgrep as grepprg
+"example :grep -e '(qi\|query)_cast<Csi::RevisionGraph::IOpaqueKeyValueEnumerator' ./word/
+let &grepprg='rg --vimgrep --ignore-case --follow '
+
+"configure fzf plugin
+" An action can be a reference to a function that processes selected lines
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val, "lnum": 1 }'))
+  copen
+  cc
+endfunction
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+let g:fzf_layout = { 'window': 'call fzf#vim#with_preview({ "options": ["--layout=reverse", "--info=inline"] })' }
+" find files
+nnoremap <leader>ff :Files<cr>
+" find lines in loaded buffers
+nnoremap <leader>fl :Lines<cr>
+" find files opened in vim-history
+nnoremap <leader>fh :History<cr>
+" search command history
+nnoremap <leader>f: :History:<cr>
+" search search-pattern history
+nnoremap <leader>f/ :History/<cr>
+" search marks
+nnoremap <leader>fm :Marks<cr>
+" search windows and tabs
+nnoremap <leader>fw :Windows<cr>
+" search buffers
+nnoremap <leader>fb :Buffers<cr>
+" search PRs
+nnoremap <leader>fp :Pullrequests<cr>
+
+
+" source init.lue
+luafile ~/.config/nvim/initialize.lua
+
